@@ -1,0 +1,106 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <title>生物出题</title>
+    <script src="/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+    
+</head>
+
+<body>
+    <div id="link">
+        <a href="/xuanzeti.html">选择题</a>
+        <a href="/tiankongti.html">填空题</a>
+        <a href="/index.html">出题</a>
+    </div>
+    <hr/>
+
+    <div id="chuti">
+        <form id="chutiSubmit" action="http://10.0.100.111:8081/chuti" method="post" accept-charset="utf-8" enctype="application/json">
+            学期：  <select name="xueqiSelect" id="xueqiSelect">
+                        <option id="A" value="A">第一学期</option>
+                        <option id="B" value="B">第二学期</option>
+                        <option id="C" value="C">第三学期</option>
+                        <option id="D" value="D">第四学期</option>
+                    </select>
+                    &nbsp;&nbsp;
+            单元：  <select name="danyuanSelect" id="danyuanSelect">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" id='danyuan' onclick="selectDanyuan();">选择</button>
+            <br/>
+            已选择：<br/>
+                    <div id="yixuanze">
+                    </div>
+            <br/>
+            <br/>
+            选择题： <br/>
+            数量： <input type="text" size="2" id="xuanzeShuliang" name="xuanzeShuliang" value="0"> &nbsp; &nbsp;
+            难度比例：
+             10: <input type="text" size="1" id="xuanzeNandu_10" name="xuanzeNandu" value="0" checked/>
+            | 9: <input type="text" size="1" id="xuanzeNandu_9"  name="xuanzeNandu" value="0" checked/>
+            | 8: <input type="text" size="1" id="xuanzeNandu_8"  name="xuanzeNandu" value="0" checked/>
+            | 7: <input type="text" size="1" id="xuanzeNandu_7"  name="xuanzeNandu" value="0" checked/>
+            | 6: <input type="text" size="1" id="xuanzeNandu_6"  name="xuanzeNandu" value="0" checked/>
+            | 5: <input type="text" size="1" id="xuanzeNandu_5"  name="xuanzeNandu" value="0" checked/>
+            | 4: <input type="text" size="1" id="xuanzeNandu_4"  name="xuanzeNandu" value="0" checked/>
+            | 3: <input type="text" size="1" id="xuanzeNandu_3"  name="xuanzeNandu" value="0" checked/>
+            | 2: <input type="text" size="1" id="xuanzeNandu_2"  name="xuanzeNandu" value="0" checked/>
+            | 1: <input type="text" size="1" id="xuanzeNandu_1"  name="xuanzeNandu" value="0" checked/>
+            | 0: <input type="text" size="1" id="xuanzeNandu_0"  name="xuanzeNandu" value="0" checked/>
+            <br/>
+            <br/>
+            填空题： <br/>
+            数量： <input type="text" size="2" id="tiankongShuliang" name="tiankongShuliang" value="0">  &nbsp;&nbsp;
+            难度比例：
+             10: <input type="text" size="1" id="tiankongNandu_10" name="tiankongNandu" value="0"/>
+            | 9: <input type="text" size="1" id="tiankongNandu_9"  name="tiankongNandu" value="0"/>
+            | 8: <input type="text" size="1" id="tiankongNandu_8"  name="tiankongNandu" value="0"/>
+            | 7: <input type="text" size="1" id="tiankongNandu_7"  name="tiankongNandu" value="0"/>
+            | 6: <input type="text" size="1" id="tiankongNandu_6"  name="tiankongNandu" value="0"/>
+            | 5: <input type="text" size="1" id="tiankongNandu_5"  name="tiankongNandu" value="0"/>
+            | 4: <input type="text" size="1" id="tiankongNandu_4"  name="tiankongNandu" value="0"/>
+            | 3: <input type="text" size="1" id="tiankongNandu_3"  name="tiankongNandu" value="0"/>
+            | 2: <input type="text" size="1" id="tiankongNandu_2"  name="tiankongNandu" value="0"/>
+            | 1: <input type="text" size="1" id="tiankongNandu_1"  name="tiankongNandu" value="0"/>
+            | 0: <input type="text" size="1" id="xuanzeNandu_0"  name="xuanzeNandu" value="0" checked/>
+            <br/>
+            <br/>
+            <br/>
+            <input type="submit" name="chuti" value="出题"/>
+        </form>
+    </div>
+
+        
+
+</body>
+<script type="text/javascript" charset="utf-8">
+function selectDanyuan() {
+    var xueqiValue = $("select#xueqiSelect").val();
+    var xueqiString = $("select#xueqiSelect").find("option#"+xueqiValue).text();
+    var danyuan = $("select#danyuanSelect").val();
+    $("div#yixuanze").append('\
+            <div id="selectedDanyuan'+xueqiValue+danyuan+'">\
+                '+xueqiString+'第'+danyuan+'单元\
+                <input type="hidden" name="xueqi" value="'+xueqiValue+''+danyuan+'"/>\
+                <a href="" onclick="removeSelected();">取消</a>\
+                <br/>\
+            </div>\
+    ');
+}
+function removeSelected() {
+    var a = $(this).parent();
+    $(this).remove();
+}
+</script>
+</html>

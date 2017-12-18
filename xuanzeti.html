@@ -1,0 +1,197 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <title>选择题</title>
+    <style type="text/css" media="screen">
+        .toolbar {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+        }
+        .text {
+            border: 1px solid #ccc;
+            height: 200px;
+        }
+    </style>
+
+    <script src="/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        jQuery.support.cors = true;       
+    </script>
+</head>
+<body onload="listAll()">
+    <div id="link">
+        <a href="/xuanzeti.html">选择题</a>
+        <a href="/tiankongti.html">填空题</a>
+        <a href="/index.html">出题</a>
+    </div>
+    <div id="tianjia">
+        <div id="timu">
+            题目：<br/>
+            <textarea id="timu" name="timu" rows="8" cols="151" wrap="hard"></textarea><br/>
+            配图：<input id="peitu" type="file" name="peitu" value="" onchange="previewFile()"/><br/>
+            <img id="imagePreview" src="" height="200" alt="image preview"/>
+        </div>
+        <div id="daans">
+            答案：
+            <select name="daan" id="daan">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+        <div>
+            学期： 
+            <select name="xueqi" id="xueqi">
+                <option value="A">一</option>
+                <option value="B">二</option>
+                <option value="C">三</option>
+                <option value="D">四</option>
+            </select>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            单元： 
+            <select name="danyuan" id="danyuan">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            难度： 
+            <select name="nandu" id="nandu">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <p><input id="submitButton" type="submit" value="添加" onclick="submit()"></p>
+    </div>
+    <hr/>
+    <div id="timuliebiaoDiv">
+        <table id='timuliebiao' border="1">
+            <tr>
+                <th>题目</th>
+                <th>配图</th>
+                <th>答案</th>
+                <th>学期</th>
+                <th>单元</th>
+                <th>难度</th>
+                <th></th>
+            </tr>
+        </table>
+        
+    </div>
+</body>
+
+<script type="text/javascript" charset="utf-8">
+    function listAll(){
+        var xueqi_zh_map = {
+            A: "一",
+            B: "二",
+            C: "三",
+            D: "四",
+        };
+        $.ajax({
+            type: "GET",
+            url: "http://10.0.100.111:8081/xuanzeti",
+            success: function(data){
+                var timuList = eval("("+data+")").xuanzeti;
+                if(timuList){
+                    for (var i=0; i<timuList.length;i++){
+                        var item = timuList[i];
+                        var timu = item.timu;
+                        var xueqi = item.xueqi.substr(0, 1);
+                        var danyuan = item.xueqi.slice(1);
+                        timu = timu.replace(/\n/g, '<br/>').replace(' ', '&nbsp;');
+                        $("table#timuliebiao").append("\
+                                <tr class='timu'>\
+                                    <td>"+timu+"</td>\
+                                    <td>\
+                                        <img src='"+item.peitu+"' height='100' alt='peitu'/>\
+                                    </td>\
+                                    <td>"+item.daan+"</td>\
+                                    <td>"+xueqi_zh_map[xueqi]+"</td>\
+                                    <td>"+danyuan+"</td>\
+                                    <td>"+item.nandu+"</td>\
+                                    <td>\
+                                        <input type='button' value='删除' onclick='deleteTimu(\""+item.id+"\")'/>\
+                                    </td>\
+                               </tr>\
+                        ");
+                    }
+                }
+            },
+            failure: function(errMsg){},
+        });
+
+    }
+
+    function deleteTimu(id){
+        $.ajax({
+            type: "GET",
+            url: "http://10.0.100.111:8081/xuanzeti_delete/"+id,
+            success: function(data){
+                window.location.reload();
+            },
+        });
+
+    }
+
+    var reader = new FileReader();
+    function previewFile(){
+        var preview = document.querySelector('img#imagePreview');
+        var file = document.querySelector('input#peitu').files[0];
+        reader.addEventListener("load", function(){
+            preview.src = reader.result;
+        }, false);
+        if (file){
+            reader.readAsDataURL(file);
+        }
+
+    }
+    function submit() {
+        var postData = new Object();
+        postData.timu = $("textarea#timu").val();
+
+        if(!reader.result){
+            var file = document.querySelector('input#peitu').files[0];
+            reader.readAsDataURL(file);
+        }
+        postData.peitu = reader.result;
+
+        postData.daan = $("select#daan").val();
+        postData.xueqi = $("select#xueqi").val()+$("select#danyuan").val();
+        postData.nandu = $("select#nandu").val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "http://10.0.100.111:8081/xuanzeti_submit",
+            data: JSON.stringify(postData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                window.location.reload();
+            },
+            failure: function(errMsg){},
+        });
+    }
+</script>
+
+
+</html>
