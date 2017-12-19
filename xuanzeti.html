@@ -99,6 +99,7 @@
 </body>
 
 <script type="text/javascript" charset="utf-8">
+    var addr = "http://biology.yues.co:8081";
     function listAll(){
         var xueqi_zh_map = {
             A: "一",
@@ -108,7 +109,7 @@
         };
         $.ajax({
             type: "GET",
-            url: "http://10.0.100.111:8081/xuanzeti",
+            url: addr+"/xuanzeti",
             success: function(data){
                 var timuList = eval("("+data+")").xuanzeti;
                 if(timuList){
@@ -144,7 +145,7 @@
     function deleteTimu(id){
         $.ajax({
             type: "GET",
-            url: "http://10.0.100.111:8081/xuanzeti_delete/"+id,
+            url: addr+"/xuanzeti_delete/"+id,
             success: function(data){
                 window.location.reload();
             },
@@ -181,7 +182,7 @@
 
         $.ajax({
             type: "POST",
-            url: "http://10.0.100.111:8081/xuanzeti_submit",
+            url: addr+"/xuanzeti_submit",
             data: JSON.stringify(postData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",

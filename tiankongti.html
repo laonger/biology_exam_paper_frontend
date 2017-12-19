@@ -85,10 +85,11 @@
 </body>
 <script type="text/javascript" charset="utf-8">
     
+    var addr = "http://biology.yues.co:8081";
     function listAll(){
         $.ajax({
             type: "GET",
-            url: "http://10.0.100.111:8081/tiankongti",
+            url: addr+"/tiankongti",
             success: function(data){
                 var timuList = eval("("+data+")").tiankongti;
                 if (timuList){
@@ -123,7 +124,7 @@
     function deleteTimu(id){
         $.ajax({
             type: "GET",
-            url: "http://10.0.100.111:8081/tiankongti_delete/"+id,
+            url: addr+"/tiankongti_delete/"+id,
             success: function(data){
                 window.location.reload();
             },
@@ -159,7 +160,7 @@
 
         $.ajax({
             type: "POST",
-            url: "http://10.0.100.111:8081/tiankongti_submit",
+            url: addr+"/tiankongti_submit",
             data: JSON.stringify(postData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
